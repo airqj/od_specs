@@ -23,10 +23,15 @@ def parse_xml(path):
         xmin = int(item['bndbox']['xmin'])
         xmax = int(item['bndbox']['xmax'])
 
-        if((xmin - last_max) % width >= 1):
+        if((xmin - last_max) > width):
             for i in range(int((xmin - last_max) % width)):
                 n_point_start = last_max + i * width
-                box_n = (n_point_start,0,n_point_start+width,img.size[1])
+                n_point_end   = n_point_start + width
+                if(n_point_end < xmin):
+                    pass
+                else:
+                    break
+                box_n = (n_point_start,0,n_point_end,img.size[1])
 
                 croped_img = img.crop(box_n)
                 path_cropped_spec = path_specs_n + filename.split(".")[0] + "_" + str(count_n) + ".png"
@@ -46,8 +51,8 @@ def parse_xml(path):
 
 def parser(path_specs):
     for file in os.listdir(path_specs):
-        print(file)
-        if(file.endswith(".xml")):
+        if(file.endswith("xml")):
+            print(file)
             pass
         else:
             continue
